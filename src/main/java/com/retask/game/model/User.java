@@ -1,5 +1,6 @@
 package com.retask.game.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
             "email"
         })
 })
-public class User{
+public class User implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,6 +58,8 @@ public class User{
     @Size(min=6, max = 100)
     private String password;
     
+    private String phoneNbr;
+    
     @Lob
 	private byte[] pic;
 	private String picfileType;
@@ -78,6 +81,8 @@ public class User{
         this.username = username;
         this.email = email;
         this.password = password;
+        this.setCreateDateTime();
+        this.setUpdateDateTime();
     }
 
     public Long getId() {
@@ -185,6 +190,15 @@ public class User{
 	public void setUpdateDateTime() {
 		this.setDateTimeUpdated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
+
+	public String getPhoneNbr() {
+		return phoneNbr;
+	}
+
+	public void setPhoneNbr(String phoneNbr) {
+		this.phoneNbr = phoneNbr;
+	}
     
+	
     
 }
