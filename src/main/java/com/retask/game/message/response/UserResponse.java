@@ -6,20 +6,32 @@ public class UserResponse {
     
     private String firstName;
    	private String lastName;
+   	
+   	private String phoneNbr;
 
     private String username;
     private String email;
 
-    public UserResponse(String accessToken, String type, String username, String firstName, String lastName, String email) {
+    public UserResponse(String accessToken, String type, String username, String firstName, 
+    		String lastName, String email, String phoneNbr) {
         this.token = accessToken;
         this.type = type;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phoneNbr = phoneNbr;
     }
 
-    public String getAccessToken() {
+    public String getPhoneNbr() {
+		return phoneNbr;
+	}
+
+	public void setPhoneNbr(String phoneNbr) {
+		this.phoneNbr = phoneNbr;
+	}
+
+	public String getAccessToken() {
         return token;
     }
 

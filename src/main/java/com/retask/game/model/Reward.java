@@ -26,61 +26,38 @@ import org.hibernate.annotations.NaturalId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "retask_users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-            "username"
-        }),
-        @UniqueConstraint(columnNames = {
-            "email"
-        })
-})
-public class User implements Serializable{
+@Table(name = "retask_rewards")
+public class Reward {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-	private String firstName;
-    @NotBlank
-	private String lastName;
-
+	private String name;
     @NotBlank
     @Size(min=3, max = 50)
+	private String descr;
+    
+    @NotBlank
     private String username;
 
-    @NaturalId
-    @NotBlank
-    @Size(max = 50)
-    @Email
-    private String email;
+    private Long cost;
 
-    @NotBlank
-    @Size(min=6, max = 100)
-    private String password;
-    
-    private String phoneNbr;
-    
     @Lob
 	private byte[] pic;
 	private String picfileType;
 	private String picfileName;
+	 @JsonIgnore
 	private Timestamp dateTimeCreated;
+	 @JsonIgnore
 	private Timestamp dateTimeUpdated; 
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "retask_user_roles", 
-    	joinColumns = @JoinColumn(name = "user_id"), 
-    	inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
-    public User() {}
-
-    public User(String firstName, String lastName, String username, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.password = password;
+	public Reward() {}
+	
+    public Reward(String name, String descr, Long cost) {
+        this.name = name;
+        this.descr = descr;
+        this.cost = cost;
         this.setCreateDateTime();
         this.setUpdateDateTime();
     }
@@ -93,76 +70,27 @@ public class User implements Serializable{
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     @JsonIgnore
-    public String getPassword() {
-        return password;
-    }
-
-    @JsonIgnore
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
 	public byte[] getPic() {
 		return pic;
 	}
-
+    @JsonIgnore
 	public void setPic(byte[] pic) {
 		this.pic = pic;
 	}
-
+    @JsonIgnore
 	public String getPicfileType() {
 		return picfileType;
 	}
-
+    @JsonIgnore
 	public void setPicfileType(String picfileType) {
 		this.picfileType = picfileType;
 	}
-
+    @JsonIgnore
 	public String getPicfileName() {
 		return picfileName;
 	}
-
+    @JsonIgnore
 	public void setPicfileName(String picfileName) {
 		this.picfileName = picfileName;
 	}
@@ -191,14 +119,39 @@ public class User implements Serializable{
 		this.setDateTimeUpdated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
 
-	public String getPhoneNbr() {
-		return phoneNbr;
+	public String getName() {
+		return name;
 	}
 
-	public void setPhoneNbr(String phoneNbr) {
-		this.phoneNbr = phoneNbr;
+	public void setName(String name) {
+		this.name = name;
 	}
-    
+
+	public String getDescr() {
+		return descr;
+	}
+
+	public void setDescr(String descr) {
+		this.descr = descr;
+	}
+
+	public Long getCost() {
+		return cost;
+	}
+
+	public void setCost(Long cost) {
+		this.cost = cost;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	} 
+
+	
 	
     
 }
