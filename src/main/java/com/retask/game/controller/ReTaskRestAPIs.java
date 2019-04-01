@@ -46,6 +46,8 @@ public class ReTaskRestAPIs {
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<Object> rewardsbyusername(Model model, Principal principal) {
 
+		System.out.println("In here");
+		
 		User user = userService.getUser(model, principal).orElseThrow(
 			() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 			
@@ -71,16 +73,7 @@ public class ReTaskRestAPIs {
 		return ResponseEntity.ok().body(new RetaskStatusResponse(0, "ok") );
 			
 	}
+	
+	
 
-//	@GetMapping("/api/test/pm")
-//	@PreAuthorize("hasRole('PM') or hasRole('ADMIN')")
-//	public String projectManagementAccess() {
-//		return ">>> Board Management Project";
-//	}
-//
-//	@GetMapping("/api/test/admin")
-//	@PreAuthorize("hasRole('ADMIN')")
-//	public String adminAccess() {
-//		return ">>> Admin Contents";
-//	}
 }
