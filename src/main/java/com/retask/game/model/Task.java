@@ -20,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "retask_tasks")
 public class Task implements Serializable {
@@ -39,6 +41,19 @@ public class Task implements Serializable {
 	private Timestamp dateTimeUpdated;
 
 	public Task() {
+	}
+
+	public Task(Task task) {
+		// If you add a field to Task update this list
+		this.id = task.id;
+		this.startdate = task.startdate;
+		this.enddate = task.enddate;
+		this.level = task.level;
+		this.name = task.name;
+		this.description = task.description;
+		this.parent_task_id = task.parent_task_id;
+		this.dateTimeCreated = task.dateTimeCreated;
+		this.dateTimeUpdated = task.dateTimeUpdated;
 	}
 
 	public Long getId() {
@@ -97,26 +112,32 @@ public class Task implements Serializable {
 		this.parent_task_id = parent_task_id;
 	}
 
+	@JsonIgnore
 	public Timestamp getDateTimeCreated() {
 		return dateTimeCreated;
 	}
 
+	@JsonIgnore
 	public void setDateTimeCreated(Timestamp dateTimeCreated) {
 		this.dateTimeCreated = dateTimeCreated;
 	}
 
+	@JsonIgnore
 	public Timestamp getDateTimeUpdated() {
 		return dateTimeUpdated;
 	}
 
+	@JsonIgnore
 	public void setDateTimeUpdated(Timestamp dateTimeUpdated) {
 		this.dateTimeUpdated = dateTimeUpdated;
 	}
 
+	@JsonIgnore
 	public void setCreateDateTime() {
 		this.setDateTimeCreated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
 
+	@JsonIgnore
 	public void setUpdateDateTime() {
 		this.setDateTimeUpdated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
