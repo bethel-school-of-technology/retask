@@ -63,6 +63,8 @@ public class User implements Serializable{
     
     private BigDecimal points;
     
+    private String defaultBackgroundImage;
+    
     @Lob
 	private byte[] pic;
 	private String picfileType;
@@ -225,7 +227,13 @@ public class User implements Serializable{
 	public void setPhoneNbr(String phoneNbr) {
 		this.phoneNbr = phoneNbr;
 	}
-    
-	
-    
+
+	public String getDefaultBackgroundImage() {
+		return defaultBackgroundImage;
+	}
+
+	public void setDefaultBackgroundImage(String defaultBackgroundImage) {
+		this.defaultBackgroundImage = defaultBackgroundImage;
+	}
+	    
 }
