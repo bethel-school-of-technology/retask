@@ -12,7 +12,7 @@ import com.retask.game.model.Reward;
 @Repository
 public interface RewardRepository extends JpaRepository<Reward, Long> {
 	
-	@Query("SELECT a FROM Reward a where a.username = :username") 
+	@Query("SELECT a FROM Reward a where a.username = :username order by date_time_updated" ) 
 	List<Reward> findByUsernameSorted(@Param("username") String username);
 	
 	List<Reward> findByUsername(String username);
