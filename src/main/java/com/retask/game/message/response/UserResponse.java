@@ -15,9 +15,11 @@ public class UserResponse {
     private String email;
     
     private BigDecimal points;
+    
+    private String defaultBackgroundImage;
 
     public UserResponse(String accessToken, String type, String username, String firstName, String lastName,
-			String email, String phoneNbr, BigDecimal points) {
+			String email, String phoneNbr, BigDecimal points, String defaultBackgroundImage) {
 		this.token = accessToken;
 		this.type = type;
 		this.setUsername(username);
@@ -26,6 +28,7 @@ public class UserResponse {
 		this.setEmail(email);
 		this.setPhoneNbr(phoneNbr);
 		this.setPoints(points);
+		this.setDefaultBackgroundImage(defaultBackgroundImage);
 	}
 
     public String getPhoneNbr() {
@@ -91,6 +94,14 @@ public class UserResponse {
 	public void setPoints(BigDecimal points) {
 		this.points = points;
 	}
-    
+
+	public String getDefaultBackgroundImage() {
+		return defaultBackgroundImage;
+	}
+
+	public void setDefaultBackgroundImage(String defaultBackgroundImage) {
+		this.defaultBackgroundImage = defaultBackgroundImage;
+	}
+	 
     
 }

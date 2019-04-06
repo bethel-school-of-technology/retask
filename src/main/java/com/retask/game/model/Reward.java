@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.retask.game.message.response.RewardResponse;
 
 @Entity
 @Table(name = "retask_rewards")
@@ -58,6 +59,19 @@ public class Reward {
 		this.cost = cost;
 		this.setCreateDateTime();
 		this.setUpdateDateTime();
+	}
+	
+	public Reward(RewardResponse reward) {
+		// If you add a field to Task update this list
+
+		this.id = reward.getId();
+		this.name = reward.getName();
+		this.descr = reward.getDescr();
+		this.username = reward.getUsername();
+		this.cost = reward.getCost();
+
+		this.dateTimeCreated = reward.getDateTimeCreated();
+		this.dateTimeUpdated = reward.getDateTimeUpdated();
 	}
 
 	public Long getId() {
