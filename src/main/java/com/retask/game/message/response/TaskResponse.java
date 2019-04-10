@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.retask.game.model.Task;
+import com.retask.game.model.TaskStatus;
 import com.retask.game.model.Upload;
 
 public class TaskResponse extends Task {
@@ -17,6 +18,7 @@ public class TaskResponse extends Task {
 	}
 	
 	private List<Upload> uploads;
+	private List<TaskStatus> taskStatus;
 
 	public List<Upload> getUploads() {
 		return uploads;
@@ -33,6 +35,16 @@ public class TaskResponse extends Task {
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
+
+	public List<TaskStatus> getTaskStatus() {
+		return taskStatus;
+	}
+
+	public void setTaskStatus(List<TaskStatus> taskStatus) {
+		this.taskStatus = taskStatus;
+	}
+	
+	
 	
 
 

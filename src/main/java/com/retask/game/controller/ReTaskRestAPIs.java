@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.retask.game.message.request.DateTimeRangeRequest;
 import com.retask.game.message.request.RewardRequest;
 import com.retask.game.message.request.TaskRequest;
+import com.retask.game.message.request.TaskStatusRequest;
 import com.retask.game.message.response.RetaskStatusResponse;
 import com.retask.game.model.User;
 import com.retask.game.services.RewardService;
@@ -36,6 +37,73 @@ public class ReTaskRestAPIs {
 	TaskService taskService = new TaskService();
 	@Autowired
 	RewardService rewardService = new RewardService();
+
+	/**
+	 * update a task status
+	 * 
+	 * @param taskStatusRequest
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@PostMapping("/api/updatetaskstatus")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> updatetaskstatus(@Valid @RequestBody TaskStatusRequest taskStatusRequest, Model model,
+			Principal principal) throws ParseException {
+
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+
+		boolean allGood = taskService.completeTask(user.getUsername(), taskStatusRequest);
+
+		if (allGood)
+			return ResponseEntity.ok(new RetaskStatusResponse(0, "ok"));
+		else
+			return ResponseEntity.ok(new RetaskStatusResponse(-1, "Task Complete Failed"));
+	}
+
+	/**
+	 * gets the tasks by username. Returns all the tasks associated with a user.
+	 * 
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@PostMapping("/api/getcompletetasks")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> getCompleteTasks(@Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model,
+			Principal principal) throws ParseException {
+
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+
+		System.out.println("Hello");
+
+		return ResponseEntity.ok(taskService.getCompleteTasks(user.getUsername(), dateTimeRange));
+	}
+
+	/**
+	 * gets the tasks by username. Returns all the tasks associated with a user.
+	 * 
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@PostMapping("/api/getopentasks")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> getOpenTasks(@Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model,
+			Principal principal) throws ParseException {
+
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+
+		System.out.println("Hello");
+
+		return ResponseEntity.ok(taskService.getOpenTasks(user.getUsername(), dateTimeRange));
+	}
 
 	/**
 	 * gets the tasks by username. Returns all the tasks associated with a user.
@@ -214,8 +282,7 @@ public class ReTaskRestAPIs {
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
-		return ResponseEntity.ok().body(
-				rewardService.deleteRewardByUsernameAndID(user.getUsername(), rewardId));
+		return ResponseEntity.ok().body(rewardService.deleteRewardByUsernameAndID(user.getUsername(), rewardId));
 	}
 
 }
