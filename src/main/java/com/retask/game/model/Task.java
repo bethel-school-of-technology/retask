@@ -1,24 +1,15 @@
 package com.retask.game.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,12 +20,14 @@ public class Task implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Timestamp startdate;
-	private Timestamp enddate;
+	private Date startdate;
+	private Date enddate;
 	private Long level;
 	private String name;
 	private String description;
 	private Long parent_task_id;
+	private Long points;
+	private String username;
 
 	private Timestamp dateTimeCreated;
 	private Timestamp dateTimeUpdated;
@@ -50,6 +43,8 @@ public class Task implements Serializable {
 		this.level = task.level;
 		this.name = task.name;
 		this.description = task.description;
+		this.points = task.points;
+		this.username = task.username;
 		this.parent_task_id = task.parent_task_id;
 		this.dateTimeCreated = task.dateTimeCreated;
 		this.dateTimeUpdated = task.dateTimeUpdated;
@@ -63,19 +58,19 @@ public class Task implements Serializable {
 		this.id = id;
 	}
 
-	public Timestamp getStartdate() {
+	public Date getStartdate() {
 		return startdate;
 	}
 
-	public void setStartdate(Timestamp startdate) {
+	public void setStartdate(Date startdate) {
 		this.startdate = startdate;
 	}
 
-	public Timestamp getEnddate() {
+	public Date getEnddate() {
 		return enddate;
 	}
 
-	public void setEnddate(Timestamp enddate) {
+	public void setEnddate(Date enddate) {
 		this.enddate = enddate;
 	}
 
@@ -140,5 +135,23 @@ public class Task implements Serializable {
 	public void setUpdateDateTime() {
 		this.setDateTimeUpdated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
+
+	public Long getPoints() {
+		return points;
+	}
+
+	public void setPoints(Long points) {
+		this.points = points;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
 
 }

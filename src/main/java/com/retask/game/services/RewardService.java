@@ -147,5 +147,34 @@ public class RewardService {
 
 		return new RetaskStatusResponse(0, "Ok");
 	}
+	
+	
+	/**
+	 * Delete a reward by Username and reward id
+	 * 
+	 * @param username
+	 * @param rewardId
+	 * @return
+	 */
+	public RetaskStatusResponse deleteRewardByUsernameAndID(String username, Long rewardId) {
+		
+		System.out.println(rewardId);
+
+		Reward reward = rewardRepository.findById(rewardId).orElse(null);
+
+		// make sure you find the reward and that it is for the same username
+		if (reward != null) {
+			if (!reward.getUsername().equals(username)) {
+				return new RetaskStatusResponse(-1, "Reward not found");
+			}
+		} else {
+			return new RetaskStatusResponse(-1, "Reward not found");
+		}
+		
+		//rewardRepository.deleteById(rewardId);
+		
+		return new RetaskStatusResponse(0, "Ok");
+	}
+
 
 }
