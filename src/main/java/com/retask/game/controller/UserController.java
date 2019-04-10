@@ -129,6 +129,7 @@ public class UserController {
 		user.setFirstName(updateUserForm.getFirstName());
 		user.setLastName(updateUserForm.getLastName());
 		user.setPhoneNbr(updateUserForm.getPhoneNbr());
+		user.setPoints(updateUserForm.getPoints());
 		user.setUpdateDateTime();
 		
 		userRepository.save(user);
