@@ -79,8 +79,6 @@ public class ReTaskRestAPIs {
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
-		System.out.println("Hello");
-
 		return ResponseEntity.ok(taskService.getCompleteTasks(user.getUsername(), dateTimeRange));
 	}
 
