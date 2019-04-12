@@ -62,6 +62,26 @@ public class ReTaskRestAPIs {
 		else
 			return ResponseEntity.ok(new RetaskStatusResponse(-1, "Task Complete Failed"));
 	}
+	
+	
+	/**
+	 * gets the tasks by username. Returns all the tasks associated with a user.
+	 * 
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@PostMapping("/api/getuncompletetasks")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> getUnCompleteTasks(@Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model,
+			Principal principal) throws ParseException {
+
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+
+		return ResponseEntity.ok(taskService.getCompleteTasks(user.getUsername(), dateTimeRange));
+	}
 
 	/**
 	 * gets the tasks by username. Returns all the tasks associated with a user.

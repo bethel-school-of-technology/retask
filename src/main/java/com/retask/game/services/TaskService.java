@@ -1,6 +1,5 @@
 package com.retask.game.services;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,34 +35,55 @@ public class TaskService {
 	@Autowired
 	private UploadRepository uploadRepository;
 
-	public boolean completeTask(String username, TaskStatusRequest taskStatusRequest) throws ParseException {
-		
+	public boolean unCompleteTask(String username, TaskStatusRequest taskStatusRequest) throws ParseException {
+
 		Date completeDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskStatusRequest.getCompleteDate());
-		
+
 		Task task = taskRepository.findTaskById(taskStatusRequest.getTask_id());
-		
+
 		if (!task.getUsername().equals(username)) {
 			return false;
 		}
-		
-		List<TaskStatus> taskStatus = taskStatusRepository.findTaskStatusByTaskId(taskStatusRequest.getTask_id(), 
+
+		List<TaskStatus> taskStatus = taskStatusRepository.findTaskStatusByTaskId(taskStatusRequest.getTask_id(),
 				completeDate, completeDate);
-		
+
+		if (taskStatus.isEmpty()) {
+			// already deleted
+			return true;
+		}
+
+		taskStatusRepository.delete(taskStatus.get(0));
+
+		return true;
+	}
+
+	public boolean completeTask(String username, TaskStatusRequest taskStatusRequest) throws ParseException {
+
+		Date completeDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskStatusRequest.getCompleteDate());
+
+		Task task = taskRepository.findTaskById(taskStatusRequest.getTask_id());
+
+		if (!task.getUsername().equals(username)) {
+			return false;
+		}
+
+		List<TaskStatus> taskStatus = taskStatusRepository.findTaskStatusByTaskId(taskStatusRequest.getTask_id(),
+				completeDate, completeDate);
+
 		if (!taskStatus.isEmpty()) {
 			// already exists
 			return true;
 		}
-		
-		
-		
+
 		java.sql.Date sqlDate = new java.sql.Date(completeDate.getTime());
-		
+
 		TaskStatus newTaskStatus = new TaskStatus();
 		newTaskStatus.setTask_id(taskStatusRequest.getTask_id());
 		newTaskStatus.setCompleteDate(sqlDate);
 		newTaskStatus.setCreateDateTime();
 		newTaskStatus.setUpdateDateTime();
-		
+
 		taskStatusRepository.save(newTaskStatus);
 
 		return true;
