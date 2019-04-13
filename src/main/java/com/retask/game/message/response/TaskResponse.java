@@ -10,6 +10,8 @@ import com.retask.game.model.Upload;
 public class TaskResponse extends Task {
 	
 	private Date dueDate;
+	private String strStartDate;
+	private String strEndDate;
 	
 	public TaskResponse() {}
 	
@@ -40,11 +42,25 @@ public class TaskResponse extends Task {
 		return taskStatus;
 	}
 
+	public String getStrStartDate() {
+		return strStartDate;
+	}
+
 	public void setTaskStatus(List<TaskStatus> taskStatus) {
 		this.taskStatus = taskStatus;
 	}
 	
-	
+	public void setStrStartDate(String strStartDate) {
+		this.strStartDate = strStartDate;
+	}
+
+	public String getStrEndDate() {
+		return strEndDate;
+	}
+
+	public void setStrEndDate(String strEndDate) {
+		this.strEndDate = strEndDate;
+	}
 	
 
 

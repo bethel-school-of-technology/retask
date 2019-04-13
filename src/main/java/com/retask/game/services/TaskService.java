@@ -2,6 +2,8 @@ package com.retask.game.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -178,6 +180,8 @@ public class TaskService {
 
 			taskResponse.setUploads(uploads);
 			taskResponse.setTaskStatus(tasksStatus);
+			
+			
 			taskResponse.setDueDate(startDate);
 
 			if (tasksStatus.isEmpty() && open)
@@ -217,8 +221,8 @@ public class TaskService {
 			taskResponse = new TaskResponse(task);
 
 			taskResponse.setUploads(uploads);
+			
 			taskResponse.setDueDate(startDate);
-
 			tasksResponse.add(taskResponse);
 		}
 
@@ -284,14 +288,23 @@ public class TaskService {
 	 * 
 	 * @param rewardRequests
 	 * @return
+	 * @throws ParseException 
 	 */
-	public boolean updateTasksForUsername(List<TaskRequest> taskRequests, User user) {
+	public boolean updateTasksForUsername(List<TaskRequest> taskRequests, User user) throws ParseException {
 
 		Task taskToSave;
 		Upload upload;
 
+		Date tempStartDate, tempEndDate;
+		
+		
 		for (TaskRequest taskRequest : taskRequests) {
-
+			
+			tempStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskRequest.getStrStartDate());
+			tempEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskRequest.getStrEndDate());
+			
+			taskRequest.setStartdate(new java.sql.Date(tempStartDate.getTime()));
+			taskRequest.setEnddate(new java.sql.Date(tempEndDate.getTime()));
 			// Save The Task
 			taskRequest.setUpdateDateTime();
 			taskRequest.setCreateDateTime();
@@ -350,5 +363,36 @@ public class TaskService {
 
 		return true;
 	}
+	
+	
+	public boolean deleteTask(String username, Long task_id) throws ParseException {
+
+		Task task = taskRepository.findTaskById(task_id);
+
+		if (!task.getUsername().equals(username)) {
+			return false;
+		}
+
+		List<TaskStatus> taskStatuses = taskStatusRepository.findByTaskId(task_id);
+
+		if (!taskStatuses.isEmpty()) {
+			for (TaskStatus taskStatus : taskStatuses) {
+				taskStatusRepository.delete(taskStatus);
+			}
+		}
+		
+		List<UserTask> userTasks = userTaskRepository.findByTaskId(task_id);
+		
+		if (!userTasks.isEmpty()) {
+			for (UserTask userTask : userTasks) {
+				userTaskRepository.delete(userTask);
+			}
+		}
+
+		taskRepository.delete(task);
+
+		return true;
+	}
+
 
 }

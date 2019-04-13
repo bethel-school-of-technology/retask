@@ -38,6 +38,8 @@ public class ReTaskRestAPIs {
 	@Autowired
 	RewardService rewardService = new RewardService();
 
+	
+	
 	/**
 	 * update a task status
 	 * 
@@ -47,40 +49,54 @@ public class ReTaskRestAPIs {
 	 * @return
 	 * @throws ParseException
 	 */
-	@PostMapping("/api/updatetaskstatus")
+	@DeleteMapping("/api/deletetask/{task_id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<Object> updatetaskstatus(@Valid @RequestBody TaskStatusRequest taskStatusRequest, Model model,
-			Principal principal) throws ParseException {
+	public ResponseEntity<Object> deletetask(@PathVariable Long task_id, Model model, Principal principal)
+			throws ParseException {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
-		boolean allGood = taskService.completeTask(user.getUsername(), taskStatusRequest);
+		boolean allGood;
+
+		allGood = taskService.deleteTask(user.getUsername(), task_id);
 
 		if (allGood)
 			return ResponseEntity.ok(new RetaskStatusResponse(0, "ok"));
 		else
-			return ResponseEntity.ok(new RetaskStatusResponse(-1, "Task Complete Failed"));
+			return ResponseEntity.ok(new RetaskStatusResponse(-1, "Task Delete Failed"));
 	}
-	
-	
+
 	/**
-	 * gets the tasks by username. Returns all the tasks associated with a user.
+	 * update a task status
 	 * 
+	 * @param taskStatusRequest
 	 * @param model
 	 * @param principal
 	 * @return
 	 * @throws ParseException
 	 */
-	@PostMapping("/api/getuncompletetasks")
+	@PostMapping("/api/updatetaskstatus/{completed}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<Object> getUnCompleteTasks(@Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model,
-			Principal principal) throws ParseException {
+	public ResponseEntity<Object> updatetaskstatus(@PathVariable boolean completed,
+			@Valid @RequestBody TaskStatusRequest taskStatusRequest, Model model, Principal principal)
+			throws ParseException {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
-		return ResponseEntity.ok(taskService.getCompleteTasks(user.getUsername(), dateTimeRange));
+		boolean allGood;
+
+		if (completed) {
+			allGood = taskService.completeTask(user.getUsername(), taskStatusRequest);
+		} else {
+			allGood = taskService.unCompleteTask(user.getUsername(), taskStatusRequest);
+		}
+
+		if (allGood)
+			return ResponseEntity.ok(new RetaskStatusResponse(0, "ok"));
+		else
+			return ResponseEntity.ok(new RetaskStatusResponse(-1, "Task Update Failed"));
 	}
 
 	/**
@@ -192,15 +208,19 @@ public class ReTaskRestAPIs {
 	 * @param model
 	 * @param principal
 	 * @return
+	 * @throws ParseException 
+	 * @throws UsernameNotFoundException 
 	 */
 	@PostMapping("/api/updatetasks")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<RetaskStatusResponse> updatetasksforusername(
-			@Valid @RequestBody List<TaskRequest> taskRequests, Model model, Principal principal) {
+			@Valid @RequestBody List<TaskRequest> taskRequests, Model model, Principal principal) 
+					throws ParseException {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
+		
 		taskService.updateTasksForUsername(taskRequests, user);
 
 		return ResponseEntity.ok().body(new RetaskStatusResponse(0, "ok"));
