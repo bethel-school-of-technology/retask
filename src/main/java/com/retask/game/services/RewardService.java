@@ -157,8 +157,6 @@ public class RewardService {
 	 * @return
 	 */
 	public RetaskStatusResponse deleteRewardByUsernameAndID(String username, Long rewardId) {
-		
-		System.out.println(rewardId);
 
 		Reward reward = rewardRepository.findById(rewardId).orElse(null);
 
@@ -171,7 +169,7 @@ public class RewardService {
 			return new RetaskStatusResponse(-1, "Reward not found");
 		}
 		
-		//rewardRepository.deleteById(rewardId);
+		rewardRepository.deleteById(rewardId);
 		
 		return new RetaskStatusResponse(0, "Ok");
 	}
