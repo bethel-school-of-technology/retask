@@ -319,7 +319,7 @@ public class ReTaskRestAPIs {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
-
+		
 		return ResponseEntity.ok().body(rewardService.deleteRewardByUsernameAndID(user.getUsername(), rewardId));
 	}
 
