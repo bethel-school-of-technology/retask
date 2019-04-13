@@ -72,7 +72,8 @@ public class AuthRestAPIs {
 		if (user != null) {
 			// return the user information
 			return ResponseEntity.ok(new UserResponse(jwt, "Bearer", user.getUsername(), user.getFirstName(),
-					user.getLastName(), user.getEmail(), user.getPhoneNbr()));
+					user.getLastName(), user.getEmail(), user.getPhoneNbr(), user.getPoints(), 
+					user.getDefaultBackgroundImage()));
 		} else {
 			// if no user is found
 			return ResponseEntity.ok(toolsService.makeJSONObject("errorMessage", "Invalid username or password"));

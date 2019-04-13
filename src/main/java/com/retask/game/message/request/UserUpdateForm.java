@@ -1,5 +1,7 @@
 package com.retask.game.message.request;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -12,6 +14,16 @@ public class UserUpdateForm {
 	private String lastName;
 	
 	private String phoneNbr;
+	
+	private BigDecimal points;
+
+	public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
+	}
 
 	public String getPhoneNbr() {
 		return phoneNbr;

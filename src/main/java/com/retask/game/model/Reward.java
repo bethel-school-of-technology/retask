@@ -1,98 +1,85 @@
 package com.retask.game.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.NaturalId;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.retask.game.message.response.RewardResponse;
 
 @Entity
 @Table(name = "retask_rewards")
 public class Reward {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotBlank
+	@NotBlank
+	@Size(min = 3, max = 50)
 	private String name;
-    @NotBlank
-    @Size(min=3, max = 50)
+	@NotBlank
 	private String descr;
-    
-    @NotBlank
-    private String username;
 
-    private Long cost;
+	@NotBlank
+	private String username;
 
-    @Lob
-	private byte[] pic;
-	private String picfileType;
-	private String picfileName;
-	 @JsonIgnore
+	private Long cost;
+
+	@JsonIgnore
 	private Timestamp dateTimeCreated;
-	 @JsonIgnore
-	private Timestamp dateTimeUpdated; 
+	@JsonIgnore
+	private Timestamp dateTimeUpdated;
 
-	public Reward() {}
+	public Reward() {
+	}
+
+	public Reward(Reward reward) {
+		// If you add a field to Task update this list
+
+		this.id = reward.id;
+		this.name = reward.name;
+		this.descr = reward.descr;
+		this.username = reward.username;
+		this.cost = reward.cost;
+
+		this.dateTimeCreated = reward.dateTimeCreated;
+		this.dateTimeUpdated = reward.dateTimeUpdated;
+	}
+
+	public Reward(String name, String descr, Long cost) {
+		this.name = name;
+		this.descr = descr;
+		this.cost = cost;
+		this.setCreateDateTime();
+		this.setUpdateDateTime();
+	}
 	
-    public Reward(String name, String descr, Long cost) {
-        this.name = name;
-        this.descr = descr;
-        this.cost = cost;
-        this.setCreateDateTime();
-        this.setUpdateDateTime();
-    }
+	public Reward(RewardResponse reward) {
+		// If you add a field to Task update this list
 
-    public Long getId() {
-        return id;
-    }
+		this.id = reward.getId();
+		this.name = reward.getName();
+		this.descr = reward.getDescr();
+		this.username = reward.getUsername();
+		this.cost = reward.getCost();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+		this.dateTimeCreated = reward.getDateTimeCreated();
+		this.dateTimeUpdated = reward.getDateTimeUpdated();
+	}
 
-    @JsonIgnore
-	public byte[] getPic() {
-		return pic;
+	public Long getId() {
+		return id;
 	}
-    @JsonIgnore
-	public void setPic(byte[] pic) {
-		this.pic = pic;
-	}
-    @JsonIgnore
-	public String getPicfileType() {
-		return picfileType;
-	}
-    @JsonIgnore
-	public void setPicfileType(String picfileType) {
-		this.picfileType = picfileType;
-	}
-    @JsonIgnore
-	public String getPicfileName() {
-		return picfileName;
-	}
-    @JsonIgnore
-	public void setPicfileName(String picfileName) {
-		this.picfileName = picfileName;
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Timestamp getDateTimeCreated() {
@@ -110,11 +97,11 @@ public class Reward {
 	public void setDateTimeUpdated(Timestamp dateTimeUpdated) {
 		this.dateTimeUpdated = dateTimeUpdated;
 	}
-	
+
 	public void setCreateDateTime() {
 		this.setDateTimeCreated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
-	
+
 	public void setUpdateDateTime() {
 		this.setDateTimeUpdated(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
 	}
@@ -149,9 +136,6 @@ public class Reward {
 
 	public void setUsername(String username) {
 		this.username = username;
-	} 
+	}
 
-	
-	
-    
 }

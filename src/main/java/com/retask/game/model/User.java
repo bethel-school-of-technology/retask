@@ -1,6 +1,7 @@
 package com.retask.game.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -60,6 +61,10 @@ public class User implements Serializable{
     
     private String phoneNbr;
     
+    private BigDecimal points;
+    
+    private String defaultBackgroundImage;
+    
     @Lob
 	private byte[] pic;
 	private String picfileType;
@@ -74,6 +79,22 @@ public class User implements Serializable{
     private Set<Role> roles = new HashSet<>();
 
     public User() {}
+    
+    public User(User u) {
+		// If you add a field to Task update this list
+    	this.firstName = u.firstName;
+        this.lastName = u.lastName;
+        this.username = u.username;
+        this.email = u.email;
+        this.password = u.password;
+        this.phoneNbr = u.phoneNbr;
+        this.points = u.points;
+        this.pic = u.pic;
+        this.picfileType = u.picfileType;
+    	this.picfileName = u.picfileName;
+    	this.dateTimeCreated = u.dateTimeCreated;
+    	this.dateTimeUpdated = u.dateTimeUpdated;
+	}
 
     public User(String firstName, String lastName, String username, String email, String password) {
         this.firstName = firstName;
@@ -85,7 +106,15 @@ public class User implements Serializable{
         this.setUpdateDateTime();
     }
 
-    public Long getId() {
+    public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -198,7 +227,13 @@ public class User implements Serializable{
 	public void setPhoneNbr(String phoneNbr) {
 		this.phoneNbr = phoneNbr;
 	}
-    
-	
-    
+
+	public String getDefaultBackgroundImage() {
+		return defaultBackgroundImage;
+	}
+
+	public void setDefaultBackgroundImage(String defaultBackgroundImage) {
+		this.defaultBackgroundImage = defaultBackgroundImage;
+	}
+	    
 }

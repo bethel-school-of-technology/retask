@@ -1,5 +1,7 @@
 package com.retask.game.message.response;
 
+import java.math.BigDecimal;
+
 public class UserResponse {
     private String token;
     private String type = "Bearer";
@@ -11,17 +13,23 @@ public class UserResponse {
 
     private String username;
     private String email;
+    
+    private BigDecimal points;
+    
+    private String defaultBackgroundImage;
 
-    public UserResponse(String accessToken, String type, String username, String firstName, 
-    		String lastName, String email, String phoneNbr) {
-        this.token = accessToken;
-        this.type = type;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNbr = phoneNbr;
-    }
+    public UserResponse(String accessToken, String type, String username, String firstName, String lastName,
+			String email, String phoneNbr, BigDecimal points, String defaultBackgroundImage) {
+		this.token = accessToken;
+		this.type = type;
+		this.setUsername(username);
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
+		this.setEmail(email);
+		this.setPhoneNbr(phoneNbr);
+		this.setPoints(points);
+		this.setDefaultBackgroundImage(defaultBackgroundImage);
+	}
 
     public String getPhoneNbr() {
 		return phoneNbr;
@@ -78,6 +86,22 @@ public class UserResponse {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-    
+
+	public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
+	}
+
+	public String getDefaultBackgroundImage() {
+		return defaultBackgroundImage;
+	}
+
+	public void setDefaultBackgroundImage(String defaultBackgroundImage) {
+		this.defaultBackgroundImage = defaultBackgroundImage;
+	}
+	 
     
 }

@@ -22,11 +22,11 @@ public class UserTask {
 	private Long task_id;
 	private String username;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "username", referencedColumnName = "username", insertable = false, updatable = false)
 	private User user;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "task_id", referencedColumnName = "id", insertable = false, updatable = false)
 	private Task task;
 	
