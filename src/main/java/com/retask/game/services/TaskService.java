@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,8 @@ public class TaskService {
 	private TaskStatusRepository taskStatusRepository;
 	@Autowired
 	private UploadRepository uploadRepository;
+	@Autowired
+	private ToolsService toolsService;
 
 	public boolean unCompleteTask(String username, TaskStatusRequest taskStatusRequest) throws ParseException {
 
@@ -121,6 +124,47 @@ public class TaskService {
 	}
 
 	/**
+	 * Call this method to get task by a date range.
+	 * 
+	 * @param open
+	 * @param username
+	 * @param dateTimeRange
+	 * @return
+	 * @throws ParseException
+	 */
+	public List<TaskResponse> getTasksByDateRange(Boolean open, String username, DateTimeRangeRequest dateTimeRange)
+			throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = sdf.parse(dateTimeRange.getStartdate());
+		Date endDate = sdf.parse(dateTimeRange.getEnddate());
+
+		List<TaskResponse> tasksResponse = new ArrayList<TaskResponse>();
+		List<TaskResponse> tasksResponse2 = new ArrayList<TaskResponse>();
+
+		// setup the date ran
+		DateTimeRangeRequest workDateTimeRange = new DateTimeRangeRequest();
+
+		long days = toolsService.daysBetweenDates(startDate, endDate) + 1;
+		LocalDate lStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		Date beginDate = null;
+		String sBeginDate = null;
+
+		for (int i = 0; i < days; i++) {
+			beginDate = Date.from(lStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			sBeginDate = sdf.format(beginDate);
+
+			workDateTimeRange.setStartdate(sBeginDate);
+			workDateTimeRange.setEnddate(sBeginDate);
+			tasksResponse2 = this.getTasks(open, username, workDateTimeRange);
+			tasksResponse.addAll(tasksResponse2);
+			lStartDate = lStartDate.plusDays(1);
+		}
+
+		return tasksResponse;
+	}
+
+	/**
 	 * gets the tasks by the username
 	 * 
 	 * @param username
@@ -148,7 +192,8 @@ public class TaskService {
 	}
 
 	/**
-	 * Get the Tasks either open or completed
+	 * Get the Tasks either open or completed where startdate and enddate are the
+	 * same. or for one specific day.
 	 * 
 	 * @param open
 	 * @param username
@@ -180,15 +225,20 @@ public class TaskService {
 
 			taskResponse.setUploads(uploads);
 			taskResponse.setTaskStatus(tasksStatus);
-			
-			
+
 			taskResponse.setDueDate(startDate);
 
-			if (tasksStatus.isEmpty() && open)
+			// if getting open task and completed not found
+			if (tasksStatus.isEmpty() && open) {
+				taskResponse.setCompleted(false);
 				tasksResponse.add(taskResponse);
+			}
 
-			if (!tasksStatus.isEmpty() && !open)
+			// if getting completed task and completed task found
+			if (!tasksStatus.isEmpty() && !open) {
+				taskResponse.setCompleted(true);
 				tasksResponse.add(taskResponse);
+			}
 		}
 
 		return tasksResponse;
@@ -221,7 +271,7 @@ public class TaskService {
 			taskResponse = new TaskResponse(task);
 
 			taskResponse.setUploads(uploads);
-			
+
 			taskResponse.setDueDate(startDate);
 			tasksResponse.add(taskResponse);
 		}
@@ -288,7 +338,7 @@ public class TaskService {
 	 * 
 	 * @param rewardRequests
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public boolean updateTasksForUsername(List<TaskRequest> taskRequests, User user) throws ParseException {
 
@@ -296,13 +346,12 @@ public class TaskService {
 		Upload upload;
 
 		Date tempStartDate, tempEndDate;
-		
-		
+
 		for (TaskRequest taskRequest : taskRequests) {
-			
+
 			tempStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskRequest.getStrStartDate());
 			tempEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskRequest.getStrEndDate());
-			
+
 			taskRequest.setStartdate(new java.sql.Date(tempStartDate.getTime()));
 			taskRequest.setEnddate(new java.sql.Date(tempEndDate.getTime()));
 			// Save The Task
@@ -363,8 +412,7 @@ public class TaskService {
 
 		return true;
 	}
-	
-	
+
 	public boolean deleteTask(String username, Long task_id) throws ParseException {
 
 		Task task = taskRepository.findTaskById(task_id);
@@ -380,9 +428,9 @@ public class TaskService {
 				taskStatusRepository.delete(taskStatus);
 			}
 		}
-		
+
 		List<UserTask> userTasks = userTaskRepository.findByTaskId(task_id);
-		
+
 		if (!userTasks.isEmpty()) {
 			for (UserTask userTask : userTasks) {
 				userTaskRepository.delete(userTask);
@@ -393,6 +441,5 @@ public class TaskService {
 
 		return true;
 	}
-
 
 }
