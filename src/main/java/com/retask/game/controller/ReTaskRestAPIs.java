@@ -117,6 +117,26 @@ public class ReTaskRestAPIs {
 
 		return ResponseEntity.ok(taskService.getCompleteTasks(user.getUsername(), dateTimeRange));
 	}
+	
+	/**
+	 * gets the tasks by username. Returns all the tasks associated with a user.
+	 * 
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@PostMapping("/api/gettaskbydaterange/{open}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> getTasksByDateRange(@PathVariable boolean open, @Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model,
+			Principal principal) throws ParseException {
+
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+
+		return ResponseEntity.ok(taskService.getTasksByDateRange(open, user.getUsername(), dateTimeRange));
+	}
+
 
 	/**
 	 * gets the tasks by username. Returns all the tasks associated with a user.

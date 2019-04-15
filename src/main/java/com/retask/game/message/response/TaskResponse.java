@@ -12,6 +12,7 @@ public class TaskResponse extends Task {
 	private Date dueDate;
 	private String strStartDate;
 	private String strEndDate;
+	private Boolean completed;
 	
 	public TaskResponse() {}
 	
@@ -60,6 +61,14 @@ public class TaskResponse extends Task {
 
 	public void setStrEndDate(String strEndDate) {
 		this.strEndDate = strEndDate;
+	}
+
+	public Boolean getCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(Boolean completed) {
+		this.completed = completed;
 	}
 	
 

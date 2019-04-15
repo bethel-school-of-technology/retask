@@ -19,5 +19,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	
 	@Query("SELECT a FROM Task a where a.username = :username and a.startdate <= :startdate and a.enddate >= :enddate order by startdate asc") 
     List<Task> findTaskByUserDate(@Param("username") String username, @Param("startdate") Date startdate, @Param("enddate") Date enddate);
-	
+
+	/**
+	 * Use this query if you have a range of dates to get tasks over
+	 * @param username
+	 * @param startdate
+	 * @param enddate
+	 * @return
+	 */
+	@Query("SELECT a FROM Task a where a.username = :username and a.startdate >= :startdate and a.enddate <= :enddate order by startdate asc") 
+    List<Task> findTaskByDateRange(@Param("username") String username, @Param("startdate") Date startdate, @Param("enddate") Date enddate);
 }
