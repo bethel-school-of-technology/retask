@@ -40,6 +40,14 @@ public class TaskService {
 	@Autowired
 	private ToolsService toolsService;
 
+	/**
+	 * unComplete a task 
+	 * 
+	 * @param username
+	 * @param taskStatusRequest
+	 * @return
+	 * @throws ParseException
+	 */
 	public boolean unCompleteTask(String username, TaskStatusRequest taskStatusRequest) throws ParseException {
 
 		Date completeDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskStatusRequest.getCompleteDate());
@@ -63,6 +71,14 @@ public class TaskService {
 		return true;
 	}
 
+	/**
+	 * complete a task.
+	 * 
+	 * @param username
+	 * @param taskStatusRequest
+	 * @return
+	 * @throws ParseException
+	 */
 	public boolean completeTask(String username, TaskStatusRequest taskStatusRequest) throws ParseException {
 
 		Date completeDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskStatusRequest.getCompleteDate());
@@ -94,6 +110,29 @@ public class TaskService {
 		return true;
 	}
 
+	/**
+	 * gets the tasks by the username
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public Task gettask(String username, Long task_id) {
+
+		Task task = taskRepository.findTaskById(task_id);
+		List<Upload> uploads;
+		List<TaskResponse> tasksResponse = new ArrayList<TaskResponse>();
+		TaskResponse taskResponse = new TaskResponse();
+		
+		if (task.getUsername().equals(username)) {
+			uploads = uploadRepository.findBySourceTypeAndId("task", task_id);
+			taskResponse = new TaskResponse(task);
+			taskResponse.setUploads(uploads);
+		}
+
+		return task;
+	}
+
+	
 	/**
 	 * gets the tasks by the username
 	 * 
