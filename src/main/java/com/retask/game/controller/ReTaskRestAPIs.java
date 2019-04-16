@@ -26,6 +26,7 @@ import com.retask.game.message.response.RetaskStatusResponse;
 import com.retask.game.model.User;
 import com.retask.game.services.RewardService;
 import com.retask.game.services.TaskService;
+import com.retask.game.services.ToolsService;
 import com.retask.game.services.UserService;
 
 @RestController
@@ -36,10 +37,50 @@ public class ReTaskRestAPIs {
 	@Autowired
 	TaskService taskService = new TaskService();
 	@Autowired
+	ToolsService toolsService;
+	@Autowired
 	RewardService rewardService = new RewardService();
+	
+	/**
+	 * get Date Range for Calendar
+	 * 
+	 * @param taskStatusRequest
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@GetMapping("/api/datecalendardaterange/{months}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> getCalendarDateRange(@PathVariable int months, Model model, Principal principal)
+			throws ParseException {
 
-	
-	
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+		
+		return ResponseEntity.ok(toolsService.getCalendarDateRange(months));
+	}
+
+	/**
+	 * get a task by id
+	 * 
+	 * @param taskStatusRequest
+	 * @param model
+	 * @param principal
+	 * @return
+	 * @throws ParseException
+	 */
+	@GetMapping("/api/gettask/{task_id}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Object> gettask(@PathVariable Long task_id, Model model, Principal principal)
+			throws ParseException {
+
+		User user = userService.getUser(model, principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
+
+		return ResponseEntity.ok(taskService.gettask(user.getUsername(), task_id));
+	}
+
 	/**
 	 * update a task status
 	 * 
@@ -117,7 +158,7 @@ public class ReTaskRestAPIs {
 
 		return ResponseEntity.ok(taskService.getCompleteTasks(user.getUsername(), dateTimeRange));
 	}
-	
+
 	/**
 	 * gets the tasks by username. Returns all the tasks associated with a user.
 	 * 
@@ -128,15 +169,15 @@ public class ReTaskRestAPIs {
 	 */
 	@PostMapping("/api/gettaskbydaterange/{open}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public ResponseEntity<Object> getTasksByDateRange(@PathVariable boolean open, @Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model,
-			Principal principal) throws ParseException {
+	public ResponseEntity<Object> getTasksByDateRange(@PathVariable boolean open,
+			@Valid @RequestBody DateTimeRangeRequest dateTimeRange, Model model, Principal principal)
+			throws ParseException {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
 		return ResponseEntity.ok(taskService.getTasksByDateRange(open, user.getUsername(), dateTimeRange));
 	}
-
 
 	/**
 	 * gets the tasks by username. Returns all the tasks associated with a user.
@@ -228,19 +269,18 @@ public class ReTaskRestAPIs {
 	 * @param model
 	 * @param principal
 	 * @return
-	 * @throws ParseException 
-	 * @throws UsernameNotFoundException 
+	 * @throws ParseException
+	 * @throws UsernameNotFoundException
 	 */
 	@PostMapping("/api/updatetasks")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<RetaskStatusResponse> updatetasksforusername(
-			@Valid @RequestBody List<TaskRequest> taskRequests, Model model, Principal principal) 
-					throws ParseException {
+			@Valid @RequestBody List<TaskRequest> taskRequests, Model model, Principal principal)
+			throws ParseException {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
 
-		
 		taskService.updateTasksForUsername(taskRequests, user);
 
 		return ResponseEntity.ok().body(new RetaskStatusResponse(0, "ok"));
@@ -339,7 +379,7 @@ public class ReTaskRestAPIs {
 
 		User user = userService.getUser(model, principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with -> username or email : "));
-		
+
 		return ResponseEntity.ok().body(rewardService.deleteRewardByUsernameAndID(user.getUsername(), rewardId));
 	}
 
