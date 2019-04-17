@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.retask.game.message.request.LoginForm;
 import com.retask.game.message.request.SignUpForm;
+import com.retask.game.message.response.RetaskStatusResponse;
 import com.retask.game.message.response.UserResponse;
 import com.retask.game.model.Role;
 import com.retask.game.model.RoleName;
@@ -82,13 +83,13 @@ public class AuthRestAPIs {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
+	public ResponseEntity<Object> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return new ResponseEntity<String>("Fail -> Username is already taken!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>("Fail -> Username is already taken!", HttpStatus.BAD_REQUEST);
 		}
 
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-			return new ResponseEntity<String>("Fail -> Email is already in use!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>("Fail -> Email is already in use!", HttpStatus.BAD_REQUEST);
 		}
 
 		// Creating user's account
@@ -121,7 +122,8 @@ public class AuthRestAPIs {
 
 		user.setRoles(roles);
 		userRepository.save(user);
+		RetaskStatusResponse rsr = new RetaskStatusResponse(0,"Register Successful");
 
-		return ResponseEntity.ok().body("{}");
+		return ResponseEntity.ok().body(rsr);
 	}
 }
