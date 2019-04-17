@@ -9,7 +9,7 @@ import com.retask.game.model.Upload;
 
 public class TaskResponse extends Task {
 	
-	private Date dueDate;
+	private String dueDate;
 	private String strStartDate;
 	private String strEndDate;
 	private Boolean completed;
@@ -31,11 +31,11 @@ public class TaskResponse extends Task {
 		this.uploads = uploads;
 	}
 
-	public Date getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 
