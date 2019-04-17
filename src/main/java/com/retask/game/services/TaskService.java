@@ -242,6 +242,8 @@ public class TaskService {
 	 */
 	public List<TaskResponse> getTasks(Boolean open, String username, DateTimeRangeRequest dateTimeRange)
 			throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTimeRange.getStartdate());
 		Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTimeRange.getEnddate());
@@ -265,7 +267,7 @@ public class TaskService {
 			taskResponse.setUploads(uploads);
 			taskResponse.setTaskStatus(tasksStatus);
 
-			taskResponse.setDueDate(startDate);
+			taskResponse.setDueDate(sdf.format(startDate));
 
 			// if getting open task and completed not found
 			if (tasksStatus.isEmpty() && open) {
@@ -292,6 +294,8 @@ public class TaskService {
 	 */
 	public List<TaskResponse> getTasksbyUsernamebydate(String username, DateTimeRangeRequest dateTimeRange)
 			throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTimeRange.getStartdate());
 		Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTimeRange.getEnddate());
@@ -311,7 +315,7 @@ public class TaskService {
 
 			taskResponse.setUploads(uploads);
 
-			taskResponse.setDueDate(startDate);
+			taskResponse.setDueDate(sdf.format(startDate));
 			tasksResponse.add(taskResponse);
 		}
 
